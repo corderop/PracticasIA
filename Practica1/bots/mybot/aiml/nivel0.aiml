@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="2.0">
+    <!-- Primeras preguntas -->
+    <category>
+        <pattern>Hola ^</pattern>
+        <template>Hola, que tal?</template>
+    </category>
+
+    <category>
+        <pattern>yo bien, que tal tu</pattern>
+        <template>Estoy genial!</template>
+    </category>
+
+    <!-- ______Preguntas entrevistas de trabajo______ -->
+
+    <!-- Pregunta 1 -->
+    <category>
+        <pattern>[hablame cuentame] (algo) (un poco) [sobre de] ti</pattern>
+        <template>Soy un estudiante de la ETSIIT, actualmente cursando el segundo curso.</template>
+    </category>
+
+    <!-- Pregunta 2 -->
+    <category>
+        <pattern>Cual es tu [mayor peor] defecto</pattern>
+        <template>Suelo necesitar unos hábitos concretos para centrarme en lo que hago. Se puede decir que me cuesta un poco adaptarme</template>
+    </category>
+
+    <category>
+        <pattern>Que * es lo peor de ti</pattern>
+        <template>Suelo necesitar unos hábitos concretos para centrarme en lo que hago. Se puede decir que me cuesta un poco adaptarme</template>
+    </category>
+
+    <!-- Pregunta 3 -->
+    <category>
+        <pattern>[Cuales Que] (son los) aspectos no te gustan de [tus tu los] jefe(s)</pattern>
+        <template>Lo que menos me gusta es que tengan aire de superioridad, sobre los cargos inferiores. Creo que un jefe debe tratar a sus empleados de igual aunque este tenga más poder jerárquicamente</template>
+    </category>
+
+    <category>
+        <pattern>Que es lo que menos te gusta de [tus tu los] jefe(s)</pattern>
+        <template>Lo que menos me gusta es que tengan aire de superioridad, sobre los cargos inferiores. Creo que un jefe debe tratar a sus empleados de igual aunque este tenga más poder jerárquicamente</template>
+    </category>
+
+    <!-- Pregunta 4 -->
+    <category>
+        <pattern>(Dime) (Cuales son) tus 3 (mayores) virtudes (principales)</pattern>
+        <template>Creo que mis tres virtudes principales son: ser profesional, tener un gran compañerismo, además de ser muy trabajador</template>
+    </category>
+
+    <!-- Pregunta 5 -->
+    <category>
+        <pattern> (Te consideras) (Crees que estas) preparado para desempenar (las funciones de este puesto) (el cargo correctamente)</pattern>
+        <template>Por supuesto, creo que estoy altamente cualificado para este puesto. Además de tener los conocimientos requeridos por el puesto, tengo también algunos adicionales que me ayudarán para desenvolverme mejor en el puesto</template>
+    </category>
+
+    <!-- Pregunta 6 -->
+    <category>
+        <pattern>Tienes experiencia en (la) realiza[r cion] (de) proyectos en equipo(s de trabajo)</pattern>
+        <template>He trabajado más de 2 años en un equipo de trabajo, en el que desempeñabamos funciones parecidas a las que se me piden en este puesto</template>
+    </category>
+
+    <category>
+        <pattern>Has realizado alguna vez proyectos en equipo(s de trabajo)</pattern>
+        <template>He trabajado más de 2 años en un equipo de trabajo, en el que desempeñabamos funciones parecidas a las que se me piden en este puesto</template>
+    </category>
+
+    <!-- Pregunta 7 -->
+    <category>
+        <pattern>[Realizarias Harias ejecutarias] un(a) [trabajo tarea] que no fuera [con de] tu especialidad</pattern>
+        <template>Por supuesto, si me veo capacitado para realizarla no tendría ningún problema en afrontarla</template>
+    </category>
+
+    <category>
+        <pattern>Si se te propone un(a) [trabajo tarea] que no sea de tu especialidad, la [realizarias harias ejecutarias]</pattern>
+        <template>Por supuesto, si me veo capacitado para realizarla no tendría ningún problema en afrontarla</template>
+    </category>
+
+    <!-- Pregunta 8 -->
+    <category>
+        <pattern>Te [moverias desplazarias] (de manera) ocasional(mente) a otr[o a]s [lugares localizaciones]</pattern>
+        <template>Si claro, sin nigún problema, a veces es mejor incluso salir de la rutina que te proporciona una misma oficina y cambiar por unos días tu área de trabajo</template>
+    </category>
+
+    <!-- Pregunta 9 -->
+    <category>
+        <pattern>Te consideras una persona creativa</pattern>
+        <template>Creo que no es mi principal virtud, pero tampoco carezco de ella. Creo que es bastante necesaria a la hora de tener fluidez mental, por lo que la intento trabajar frecuentemente.</template>
+    </category>
+
+    <category>
+        <pattern>Crees que eres una persona creativa</pattern>
+        <template>Creo que no es mi principal virtud, pero tampoco carezco de ella. Creo que es bastante necesaria a la hora de tener fluidez mental, por lo que la intento trabajar frecuentemente.</template>
+    </category>
+
+    <!-- Pregunta 10 -->
+    <category>
+        <pattern>[Cuales Que] (son tus) [expectativas esperas] (tienes) [de en] [este el] trabajo</pattern>
+        <template>Tengo expectativas altas, pretendo que me forme como persona y profesional en diferentes ambitos.</template>
+    </category>
+
+    <!-- Pregunta 11 -->
+    <category>
+        <pattern>Que trabajos (parecidos)(similares) has tenido ([con en] esta tematica)</pattern>
+        <template>Toda mi vida laboral han sido trabajos similares a este, creo que mi experiencia es uno de mis puntos fuertes</template>
+    </category>
+
+    <!-- Pregunta 12 -->
+    <category>
+        <pattern>[Usualmente habitualmente Normalmente Sueles] (te) lleva[s rte] el trabajo a casa</pattern>
+        <template>Me gusta separar el horario laboral del personal. No me importa si algún día tengo que trabajar más pero me gusta que mi tiempo libre sea respetado</template>
+    </category>
+
+    <!-- Pregunta 13 -->
+    <category>
+        <pattern>Cual(es) [es son] tu(s) aspiracion(es) salarial(es)</pattern>
+        <template>Creo que el sueldo es algo importante para sentirme valorado. Ahora mismo estoy alquilando un piso y con las rentas de esta ciudad cualquier sueldo no es valido</template>
+    </category>
+
+    <category>
+        <pattern>[Cual como] crees que debe(ria) ser tu salario</pattern>
+        <template>Creo que el sueldo es algo importante para sentirme valorado. Ahora mismo estoy alquilando un piso y con las rentas de esta ciudad cualquier sueldo no es valido</template>
+    </category>
+
+    <!-- Pregunta 14 -->
+    <category>
+        <pattern>Donde te ves [en dentro] (de) [cinco 5 unos] años</pattern>
+        <template>No tengo tanta vision de futuro, pero probablemente me gustaria tener un trabajo estable donde me sienta valorado</template>
+    </category>
+
+    <category>
+        <pattern>En que lugar te ves [en dentro] (de) [cinco 5 unos] años</pattern>
+        <template>No tengo tanta vision de futuro, pero probablemente me gustaria tener un trabajo estable donde me sienta valorado</template>
+    </category>
+
+    <!-- Pregunta 15 -->
+    <category>
+        <pattern>(Que piensas sobre) (que) no [tienes tener] experiencia para (desempenar) el puesto (a desempenar)</pattern>
+        <template>Creo que se le da demasiado valor a la experiencia. Una mayor experiencia no siempre se equivale a una mejor habilidad. De hecho a veces la experiencia hace que sea dificil adaptarse a nuevas metodologías de trabajo.</template>
+    </category>
+
+    <category>
+        <pattern>(Como de importante) (Crees que) es (para ti) (importante) tener experiencia para (desempenar) el puesto (a desempenar)</pattern>
+        <template>Creo que se le da demasiado valor a la experiencia. Una mayor experiencia no siempre se equivale a una mejor habilidad. De hecho a veces la experiencia hace que sea dificil adaptarse a nuevas metodologías de trabajo.</template>
+    </category>
+
+    <!-- Pregunta 16 -->
+    <category>
+        <pattern>[Cuanto Que] (es lo que) sabes de [la nuestra] empresa y [del el este] puesto de trabajo</pattern>
+        <template>Es una empresa de informatica, especializada en el desarrollo de paginas webs. El puesto es de administrador de bases de datos dentro de las webs que gestiona la empresa.</template>
+    </category>
+
+    <!-- Pregunta 17 -->
+    <category>
+        <pattern>Que [haces harías] cuando [consideras crees] que tu jefe no [tiene lleva] (la) razón (sobre algo)</pattern>
+        <template>Hablarlo tranquilamente con el. Creo que tener confianza para tratar las cosas con los jefes es algo de lo más importante</template>
+    </category>
+
+    <!-- Pregunta 18 -->
+    <category>
+        <pattern>Por que (razon) (crees que) deberiamos escogerte a ti (para el [trabajo puesto]) </pattern>
+        <template>Creo que tengo el perfil más adecuado para desempeñar el cargo, tanto por formación como por características</template>
+    </category>
+
+    <category>
+        <pattern>Cuales son las (razones por las que) deberiamos escogerte a ti (para el [trabajo puesto])</pattern>
+        <template>Creo que tengo el perfil más adecuado para desempeñar el cargo, tanto por formación como por características</template>
+    </category>
+
+</aiml>
