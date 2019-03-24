@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="2.0">
+
+    <!-- Añadir datos de las series -->
+    <category>
+        <pattern>De que va (la serie) <set>series</set></pattern>
+        <template>
+            <srai>decode <map><name><star/></name>descripcion</map></srai>
+        </template>
+    </category>
+
+    <category>
+        <pattern>De que va (la serie) *</pattern>
+        <template>
+            <think><set name="nuevaserie"><star/></set></think>
+            La serie <get name="nuevaserie"/> no esta en el catálogo, quieres añadirla</template>
+    </category>
+
+    <category>
+        <pattern>Si ^</pattern>
+        <that>La serie * no esta en el catálogo, quieres añadirla</that>
+        <template>
+            Ok, crea en la carpeta maps un archivo llamado <get name="nuevaserie"/>.txt. Cuando hayas terminado reiniciame y al volver, pideme que anada la serie <get name="nuevaserie"/>.
+        </template>
+    </category>
+
+    <!-- Añadir una serie secuencia-->
+    <category>
+        <pattern>Añade (la serie) *</pattern>
+        <template>
+            <think><set name="nuevaserie"><star/></set></think>
+            Voy a añadir la serie <get name="nuevaserie"/> a tu lista de series. Si no has creado previamente el archivo "<get name="nuevaserie"/>.txt" crealo, reiniciame y pideme de nuevo que la añada. Podrias decirme que plataforma la ofrece
+            <addtomap>
+                <name><get name="nuevaserie"/></name>
+                <key>Serie</key>
+                <value><get name="nuevaserie"/></value>
+            </addtomap>
+            <addtoset>
+                <name>series</name>
+                <key><get name="nuevaserie"/></key>
+            </addtoset>
+        </template>
+    </category>
+
+    <category>
+        <pattern><set>plataformas</set></pattern>
+        <that>^ que plataforma la ofrece</that>
+        <template>
+            <addtomap>
+                <name><get name="nuevaserie"/></name>
+                <key>Plataforma</key>
+                <value><star/></value>
+            </addtomap>
+            Se ha añadido la plataforma, a que generos pertenece
+        </template>
+    </category>
+
+    <category>
+        <pattern> * </pattern>
+        <that>^ que generos pertenece</that>
+        <template>
+            <addtomap>
+                <name><get name="nuevaserie"/></name>
+                <key>genero</key>
+                <value><srai> take elements <star/></srai></value>
+            </addtomap>
+            Se han añadido los generos, de que va la serie
+        </template>
+    </category>
+
+    <category>
+        <pattern> * </pattern>
+        <that>^ de que va la serie</that>
+        <template>
+            <addtomap>
+                <name><get name="nuevaserie"/></name>
+                <key>descripcion</key>
+                <value><srai> code <star/></srai></value>
+            </addtomap>
+            Se ha añadido la descripcion, en que idiomas esta disponible
+        </template>
+    </category>
+
+    <category>
+        <pattern> * </pattern>
+        <that>^ en que idiomas esta disponible</that>
+        <template>
+            <addtomap>
+                <name><get name="nuevaserie"/></name>
+                <key>idiomas</key>
+                <value><srai> take elements <star/></srai></value>
+            </addtomap>
+            Se han añadido los idiomas disponibles, en que idiomas estan los subtitulos
+        </template>
+    </category>
+
+    <category>
+        <pattern> * </pattern>
+        <that>^ en que idiomas estan los subtitulos</that>
+        <template>
+            <addtomap>
+                <name><get name="nuevaserie"/></name>
+                <key>subtitulos</key>
+                <value><srai> take elements <star/></srai></value>
+            </addtomap>
+            Se han añadido los subtitulos disponibles, en que web puedo encontrar la serie
+        </template>
+    </category>
+
+    <category>
+        <pattern> * </pattern>
+        <that>^ en que web puedo encontrar la serie</that>
+        <template>
+            <addtomap>
+                <name><get name="nuevaserie"/></name>
+                <key>web</key>
+                <value><star/></value>
+            </addtomap>
+            Se ha añadido la web, quieres añadir capitulos
+        </template>
+    </category>
+
+    <category>
+        <pattern> Si ^ </pattern>
+        <that>^ quieres añadir (mas) capitulos</that>
+        <template>
+            de que temporada quieres añadir el capitulo
+        </template>
+    </category>
+
+    <category>
+        <pattern> <set>number</set> </pattern>
+        <that>^ de que temporada quieres añadir el capitulo</that>
+        <template>
+            <think>
+                <set name="temporadaNew">temporada<star/></set>
+                <addtomap>
+                    <name><get name="nuevaserie"/></name>
+                    <key><get name="temporadaNew"/></key>
+                    <value>unknown</value>
+                </addtomap>
+            </think>
+            Introduce el nombre del capitulo
+        </template>
+    </category>
+
+    <!-- Temporada mal introducida -->
+    <category>
+        <pattern> * </pattern>
+        <that>^ de que temporada quieres añadir el capitulo</that>
+        <template>
+            Has introducido mal la temporada, tienes que introducir un solo número, de que temporada quieres añadir el capitulo
+        </template>
+    </category>
+
+    <category>
+        <pattern> * </pattern>
+        <that>^ Introduce el nombre del capitulo</that>
+        <template>
+            <think>
+            <set var="prueba"><map><name><get name="nuevaserie"/></name><get name="temporadaNew"/></map></set>
+            <condition var="prueba">
+                <li value="unknown">
+                    <modifymap>
+                        <name><get name="nuevaserie"/></name>
+                        <key><get name="temporadaNew"/></key>
+                        <value><srai> code <star/></srai>@</value>
+                    </modifymap>
+                </li>
+                <li>
+                    <modifymap>
+                        <name><get name="nuevaserie"/></name>
+                        <key><get name="temporadaNew"/></key>
+                        <value><map><name><get name="nuevaserie"/></name><get name="temporadaNew"/></map>@<srai> code <star/></srai>@</value>
+                    </modifymap>
+                </li>
+            </condition>
+            </think>
+            Introduce la duracion    
+        </template><srai> take elements <star/></srai>
+    </category>
+
+    <category>
+        <pattern><set>number</set></pattern>
+        <that>^ Introduce la duracion</that>
+        <template>
+            <think>
+                <modifymap>
+                    <name><get name="nuevaserie"/></name>
+                    <key><get name="temporadaNew"/></key>
+                    <value><map><name><get name="nuevaserie"/></name><get name="temporadaNew"/></map><star/></value>
+                </modifymap>
+            </think>
+            Capitulo añadido, quieres añadir mas capitulos de esta temporada
+        </template>
+    </category>
+
+    <!-- Duración mal introducida -->
+    <category>
+        <pattern>*</pattern>
+        <that>^ Introduce la duracion</that>
+        <template>
+            Duración mal introducida, introduce solo un número, introduce la duracion
+        </template>
+    </category>
+
+    <category>
+        <pattern>Si ^</pattern>
+        <that>^ quieres añadir mas capitulos de esta temporada</that>
+        <template>
+            Introduce el nombre del capitulo
+        </template>
+    </category>
+
+    <category>
+        <pattern>No ^</pattern>
+        <that>^ quieres añadir (mas) capitulos (de esta temporada)</that>
+        <template>
+            Ok, avisame si quieres añadirlos más tarde
+        </template>
+    </category>
+
+    <!-- Añadir nuevos elementos -->
+
+    <!-- PLATAFORMA -->
+    <category>
+        <pattern>Cambia la plataforma de la serie <set>series</set> a <set>plataformas</set></pattern>
+        <template>
+            <modifymap>
+                <name><star index="1"/></name>
+                <key>plataforma</key>
+                <value><star index="2"/></value>
+            </modifymap>
+            Ok, he añadido a la serie <star index="1"/> la plataforma <star index="2"/>
+        </template>
+    </category>
+
+    <category>
+        <pattern>Cambia la plataforma de la serie * a *</pattern>
+        <template>
+            No he podido añadirla, puede se que la serie <star index="1"/> no este añadida o que la plataforma <star index="2"/> no esté entre las aceptadas. Vuelve a formularlo con valores válidos
+        </template>
+    </category>
+
+    <!-- GENERO -->
+
+    <!-- Cambiar -->
+    <category>
+        <pattern>Cambia [el los] genero(s) de la serie <set>series</set> a *</pattern>
+        <template>
+            <modifymap>
+                <name><star index="1"/></name>
+                <key>genero</key>
+                <value><srai> take elements <star index="2"/></srai></value>
+            </modifymap>
+            Ok, he añadido a la serie <star index="1"/> los generos <star index="2"/>
+        </template>
+    </category>
+
+    <category>
+        <pattern>Cambia [el los] genero(s) de la serie * a *</pattern>
+        <template>
+            <think><set name="nuevaserie"><star index="2"/></set></think>
+            No he podido añadirla, la serie <star index="1"/> no existe, quieres añadirla
+        </template>
+    </category>
+
+    <!-- Añadir -->
+    <category>
+        <pattern>Añade [el los] genero(s) * a la serie <set>series</set></pattern>
+        <template>
+            <modifymap>
+                <name><star index="2"/></name>
+                <key>genero</key>
+                <value><map><name><star index="2"/></name>genero</map>@<srai> take elements <star index="1"/></srai></value>
+            </modifymap>
+            Ok, he añadido a la serie <star index="1"/> los generos <star index="2"/>
+        </template>
+    </category>
+
+    <category>
+        <pattern>Añade [el los] genero(s) * a la serie *</pattern>
+        <template>
+            <think><set name="nuevaserie"><star index="2"/></set></think>
+            No he podido añadirla, la serie <star index="2"/> no existe, quieres añadirla
+        </template>
+    </category>
+
+    <!-- DESCRIPCION -->
+
+    <!-- Cambiar -->
+    <category>
+        <pattern>Cambia la descripcion de la serie <set>series</set> a *</pattern>
+        <template>
+            <modifymap>
+                <name><star index="1"/></name>
+                <key>descripcion</key>
+                <value><srai> code <star index="2"/></srai></value>
+            </modifymap>
+            Ok, he añadido esta descripcion a la serie <star index="1"/>
+        </template>
+    </category>
+
+    <category>
+        <pattern>Cambia la descripcion de la serie <set>series</set> a *</pattern>
+        <template>
+            <think><set name="nuevaserie"><star index="2"/></set></think>
+            No he podido añadirla, la serie <star index="1"/> no existe, quieres añadirla
+        </template>
+    </category>
+
+    <!-- IDIOMAS -->
+
+    <!-- Cambiar -->
+    <category>
+        <pattern>Cambia [el los] idioma(s) de la serie <set>series</set> a *</pattern>
+        <template>
+            <modifymap>
+                <name><star index="1"/></name>
+                <key>idiomas</key>
+                <value><srai> take elements <star index="2"/></srai></value>
+            </modifymap>
+            Ok, he añadido a la serie <star index="1"/> los idiomas <star index="2"/>
+        </template>
+    </category>
+
+    <category>
+        <pattern>Cambia [el los] idioma(s) de la serie * a *</pattern>
+        <template>
+            <think><set name="nuevaserie"><star index="2"/></set></think>
+            No he podido añadirla, la serie <star index="1"/> no existe, quieres añadirla
+        </template>
+    </category>
+
+    <!-- Añadir -->
+    <category>
+        <pattern>Añade [el los] idioma(s) * a la serie <set>series</set></pattern>
+        <template>
+            <modifymap>
+                <name><star index="2"/></name>
+                <key>idiomas</key>
+                <value><map><name><star index="2"/></name>idiomas</map>@<srai> take elements <star index="1"/></srai></value>
+            </modifymap>
+            Ok, he añadido a la serie <star index="1"/> los idiomas <star index="2"/>
+        </template>
+    </category>
+
+    <category>
+        <pattern>Añade [el los] idioma(s) * a la serie *</pattern>
+        <template>
+            <think><set name="nuevaserie"><star index="2"/></set></think>
+            No he podido añadirla, la serie <star index="2"/> no existe, quieres añadirla
+        </template>
+    </category>
+
+    <!-- SUBTITULOS -->
+
+    <!-- Cambiar -->
+    <category>
+        <pattern>Cambia los subtitulos de la serie <set>series</set> a *</pattern>
+        <template>
+            <modifymap>
+                <name><star index="1"/></name>
+                <key>subtitulos</key>
+                <value><srai> take elements <star index="2"/></srai></value>
+            </modifymap>
+            Ok, he añadido a la serie <star index="1"/> los subtitulos <star index="2"/>
+        </template>
+    </category>
+
+    <category>
+        <pattern>Cambia los subtitulos de la serie * a *</pattern>
+        <template>
+            <think><set name="nuevaserie"><star index="2"/></set></think>
+            No he podido añadirla, la serie <star index="1"/> no existe, quieres añadirla
+        </template>
+    </category>
+
+    <!-- Añadir -->
+    <category>
+        <pattern>Añade los subtitulos * a la serie <set>series</set></pattern>
+        <template>
+            <modifymap>
+                <name><star index="2"/></name>
+                <key>subtitulos</key>
+                <value><map><name><star index="2"/></name>subtitulos</map>@<srai> take elements <star index="1"/></srai></value>
+            </modifymap>
+            Ok, he añadido a la serie <star index="1"/> los subtitulos <star index="2"/>
+        </template>
+    </category>
+
+    <category>
+        <pattern>Añade los subtitulos * a la serie *</pattern>
+        <template>
+            <think><set name="nuevaserie"><star index="2"/></set></think>
+            No he podido añadirla, la serie <star index="2"/> no existe, quieres añadirla
+        </template>
+    </category>
+
+    <!-- WEB -->
+
+    <!-- Cambiar -->
+    <category>
+        <pattern>Cambia la web de la serie <set>series</set> a *</pattern>
+        <template>
+            <modifymap>
+                <name><star index="1"/></name>
+                <key>web</key>
+                <value><srai> take elements <star index="2"/></srai></value>
+            </modifymap>
+            Ok, he añadido a la serie <star index="1"/> la web <star index="2"/>
+        </template>
+    </category>
+
+    <category>
+        <pattern>Cambia la web de la serie * a *</pattern>
+        <template>
+            <think><set name="nuevaserie"><star index="2"/></set></think>
+            No he podido añadirla, la serie <star index="1"/> no existe, quieres añadirla
+        </template>
+    </category>
+
+    <!-- CAPITULOS -->
+
+    <category>
+        <pattern>Añade capitulos a la serie <set>series</set></pattern>
+        <template>
+            <think>
+                <think><set name="nuevaserie"><star/></set></think>
+            </think>
+            Ok, de que temporada quieres añadir el capitulo
+        </template>
+    </category>
+
+    <category>
+        <pattern>Añade capitulos a la serie *</pattern>
+        <template>
+            <think><set name="nuevaserie"><star index="2"/></set></think>
+            No he podido añadirla, la serie <star index="2"/> no existe, quieres añadirla
+        </template>
+    </category>
+
+</aiml>

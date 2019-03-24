@@ -1,0 +1,5 @@
+drama
+terror
+thriller
+comedia
+romance

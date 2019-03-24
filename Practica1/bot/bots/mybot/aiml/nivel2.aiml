@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="2.0">
+
+    <!-- Consulta de @ -->
+
+    <category>
+        <pattern>Muestrame [el los] <set>atributos_fields</set> de (la serie) <set>series</set></pattern>
+        <template>
+            <srai> ANIADEY <srai> decode_fields <map><name><star index="2"/></name><star index="1"/></map></srai></srai>
+        </template>
+    </category>
+
+    <!-- Idiomas -->
+
+    <category>
+        <pattern>En que idiomas esta (la serie) <set>series</set></pattern>
+        <template>
+            <srai> Muestrame los idiomas de la serie <star/> </srai>
+        </template>
+    </category>
+
+    <category>
+    <pattern> ^ <set>series</set> esta en <set>idioma</set> </pattern>
+    <template>
+        <think>
+            <set var="lista"><map><name><star index="2"/></name>idiomas</map></set>
+            <set var="lista"><srai>decode_fields <get var="lista"/></srai></set>
+            <set var="idioma"><first><get var="lista"/></first></set>
+            <condition var="idioma">
+                <li value="NIL">
+                    <set var="solucion">No, no esta en <star index="3"/> </set>
+                </li>
+                <li><value><star index="3"/></value>
+                    <set var="solucion">Si, <star index="2"/> esta en <star index="3"/></set>
+                </li>
+                <li>
+                    <set var="lista"><rest><get var="lista"/></rest></set>
+                    <set var="idioma"><first><get var="lista"/></first></set>
+                    <loop/>
+                </li>
+            </condition>
+        </think>
+        <get var="solucion"/>
+    </template>
+    </category>
+
+    <!-- Genero -->
+
+    <category>
+        <pattern>A que generos pertence (la serie) <set>series</set></pattern>
+        <template>
+            <srai> Muestrame el genero de la serie <star/> </srai>
+        </template>
+    </category>
+
+    <category>
+    <pattern> Pertenece <set>series</set> al genero <set>genero</set> </pattern>
+    <template>
+        <think>
+            <set var="lista"><map><name><star index="1"/></name>genero</map></set>
+            <set var="lista"><srai>decode_fields <get var="lista"/></srai></set>
+            <set var="genero"><first><get var="lista"/></first></set>
+            <condition var="genero">
+                <li value="NIL">
+                    <set var="solucion">No, no pertenece a <star index="2"/> </set>
+                </li>
+                <li><value><star index="2"/></value>
+                    <set var="solucion">Si, la serie <star index="1"/> pertenece a <star index="2"/></set>
+                </li>
+                <li>
+                    <set var="lista"><rest><get var="lista"/></rest></set>
+                    <set var="genero"><first><get var="lista"/></first></set>
+                    <loop/>
+                </li>
+            </condition>
+        </think>
+        <get var="solucion"/>
+    </template>
+    </category>
+
+    <!-- Subtitulos -->
+
+    <category>
+        <pattern>Que subtitulos contiene (la serie) <set>series</set></pattern>
+        <template>
+            <srai> Muestrame los subtitulos de la serie <star/> </srai>
+        </template>
+    </category>
+
+    <category>
+    <pattern> Contiene <set>series</set> los subtitulos del idioma <set>subtitulos</set> </pattern>
+    <template>
+        <think>
+            <set var="lista"><map><name><star index="1"/></name>subtitulos</map></set>
+            <set var="lista"><srai>decode_fields <get var="lista"/></srai></set>
+            <set var="subtitulos"><first><get var="lista"/></first></set>
+            <condition var="subtitulos">
+                <li value="NIL">
+                    <set var="solucion">No, no pertenece a <star index="2"/> </set>
+                </li>
+                <li><value><star index="2"/></value>
+                    <set var="solucion">Si, la serie <star index="1"/> pertenece a <star index="2"/></set>
+                </li>
+                <li>
+                    <set var="lista"><rest><get var="lista"/></rest></set>
+                    <set var="subtitulos"><first><get var="lista"/></first></set>
+                    <loop/>
+                </li>
+            </condition>
+        </think>
+        <get var="solucion"/>
+    </template>
+    </category>
+
+    <!-- No fields -->
+
+    <category>
+        <pattern>Muestrame la <set>atributos</set> de (la serie) <set>series</set></pattern>
+        <template>
+            <srai> decode <map><name><star index="2"/></name><star index="1"/></map></srai>
+        </template>
+    </category>
+
+    <!-- Numero de idiomas  -->
+    <category>
+        <pattern>Cuantos idiomas tiene (la serie) <set>series</set></pattern>
+        <template>
+            <srai> COUNT <srai>decode_fields <map><name><star/></name>idiomas</map></srai></srai>
+        </template>
+    </category>
+
+    <!-- NUmero de subtitulos -->
+    <category>
+        <pattern>Cuantos subtitulos tiene (la serie) <set>series</set></pattern>
+        <template>
+            <srai> COUNT <srai>decode_fields <map><name><star/></name>subtitulos</map></srai></srai>
+        </template>
+    </category>
+
+    <!-- Numero de capitulos totales -->
+    <category>
+        <pattern>Cuantos capitulos tiene (la serie) <set>series</set> en la temporada <set>number</set></pattern>
+        <template>
+            <srai> COUNT_CAP <srai>decode_fields <map><name><star index="1"/></name>temporada<star index="2"/></map></srai></srai>
+        </template>
+    </category>
+
+    <category>
+        <pattern>Cuantos capitulos tiene (la serie) <set>series</set></pattern>
+        <template>
+            <think>
+            <set var="count">1</set>
+            <set var="final"><srai>Cuantas temporadas tiene <star/></srai></set>
+            <set var="final">
+                <map>
+                    <name>successor</name>
+                    <get var="final"/>
+                </map>
+            </set>
+            <!-- <set var="salida"> -->
+            <condition var="count">
+                <li><value><get var="final"/></value>
+                </li>
+                <li>
+                    <condition var="count">
+                        <li value="1">
+                            <set var="salida"><srai>decode_fields <map><name><star/></name>temporada<get var="count"/></map></srai></set>
+                        </li>
+                        <li>
+                            <set var="salida"><get var="salida"/> <srai>decode_fields <map><name><star/></name>temporada<get var="count"/></map></srai></set>
+                        </li>
+                    </condition>
+                    <set var="count">
+                        <map>
+                            <name>successor</name>
+                            <get var="count"/>
+                        </map>
+                    </set>
+                    <loop/>
+                </li>
+            </condition>
+            </think>
+            <!-- <get var="salida"/> -->
+            <srai> COUNT_CAP <get var="salida"/></srai>
+        </template>
+    </category>
+
+    <category>
+        <pattern>Cuantas temporadas tiene (la serie) <set>series</set></pattern>
+        <template>
+            <think>
+            <set var="count">0</set>
+            <set var="comp">1</set>
+            <set var="actual"><map><name><star/></name>temporada<get var="comp"/></map></set>
+            <condition var="actual">
+                <li value="unknown">
+                </li>
+                <li>
+                    <set var="count">
+                        <map>
+                            <name>successor</name>
+                            <get var="count"/>
+                        </map>
+                    </set>
+                    <set var="comp">
+                        <map>
+                            <name>successor</name>
+                            <get var="comp"/>
+                        </map>
+                    </set>
+                    <set var="actual"><map><name><star/></name>temporada<get var="comp"/></map></set>
+                    <loop/>
+                </li>
+            </condition>
+            </think>
+            <get var="count"/>
+        </template>
+    </category>
+
+    <!-- Nombre del capitulo -->
+    <category>
+        <pattern>Dime el nombre del capitulo <set>number</set> de la temporada <set>number</set> de (la serie) <set>series</set></pattern>
+        <template>
+            <think>
+            <set var="count">1</set>
+            <!-- <set var="comp">1</set> -->
+            <set var="capitulo"><star index="1"/></set>
+            <set var="temporada"><star index="2"/></set>
+            <set var="serie"><star index="3"/></set>
+            <set var="texto"><srai> decode_fields <map><name><get var="serie"/></name>temporada<get var="temporada"/></map></srai></set>
+            <set var="list"><get var="texto"/></set>
+            <set var="item"><first><get var="list"/></first></set>
+            <set var="list"><rest><get var="list"/></rest></set>
+            <condition var="count">
+                <li><value><get var="capitulo"/></value>
+                    <condition var="item">
+                        <li value="NIL">
+                            <set var="salida">No existe ese capitulo</set>
+                        </li>
+                        <li>
+                            <set var="salida"><srai> decode <get var="item"/></srai></set>
+                        </li>
+                    </condition>
+                </li>
+                <li>
+                    <set var="count">
+                        <map>
+                            <name>successor</name>
+                            <get var="count"/>
+                        </map>
+                    </set>
+                    <set var="item"><first><get var="list"/></first></set>
+                    <set var="list"><rest><get var="list"/></rest></set>
+                    <set var="item"><first><get var="list"/></first></set>
+                    <set var="list"><rest><get var="list"/></rest></set>
+                    <loop/>
+                </li>
+            </condition>
+            </think>
+            <get var="salida"/>
+        </template>
+    </category>
+
+    <!-- Duración del capitulo -->
+    <category>
+        <pattern>Dime la duracion del capitulo <set>number</set> de la temporada <set>number</set> de (la serie) <set>series</set></pattern>
+        <template>
+            <think>
+            <set var="count">1</set>
+            <!-- <set var="comp">1</set> -->
+            <set var="capitulo"><star index="1"/></set>
+            <set var="temporada"><star index="2"/></set>
+            <set var="serie"><star index="3"/></set>
+            <set var="texto"><srai> decode_fields <map><name><get var="serie"/></name>temporada<get var="temporada"/></map></srai></set>
+            <set var="list"><get var="texto"/></set>
+            <set var="item"><first><get var="list"/></first></set>
+            <set var="list"><rest><get var="list"/></rest></set>
+            <set var="item"><first><get var="list"/></first></set>
+            <set var="list"><rest><get var="list"/></rest></set>
+            <condition var="count">
+                <li><value><get var="capitulo"/></value>
+                    <condition var="item">
+                        <li value="NIL">
+                            <set var="salida">No existe ese capitulo</set>
+                        </li>
+                        <li>
+                            <set var="salida"><srai> decode <get var="item"/></srai></set>
+                        </li>
+                    </condition>
+                </li>
+                <li>
+                    <set var="count">
+                        <map>
+                            <name>successor</name>
+                            <get var="count"/>
+                        </map>
+                    </set>
+                    <set var="item"><first><get var="list"/></first></set>
+                    <set var="list"><rest><get var="list"/></rest></set>
+                    <set var="item"><first><get var="list"/></first></set>
+                    <set var="list"><rest><get var="list"/></rest></set>
+                    <loop/>
+                </li>
+            </condition>
+            </think>
+            <get var="salida"/>
+        </template>
+    </category>
+
+</aiml>

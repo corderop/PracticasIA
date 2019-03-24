@@ -1,0 +1,3 @@
+serie:breaking bad
+plataforma:netflix
+genero:drama@unknown

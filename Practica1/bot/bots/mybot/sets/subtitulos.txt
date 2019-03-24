@@ -1,0 +1,8 @@
+ingles
+espanol
+español
+frances
+aleman
+portugues
+chino
+japones
