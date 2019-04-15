@@ -1,9 +1,0 @@
-serie:bb
-plataforma:hbo
-genero:drama@horror@qwerqwe
-descripcion:de_un_panchito
-idiomas:asdfsaf@qewr@sfgfds@bcvcvn
-subtitulos:aleman
-web:google
-temporada1:wqer@12@jlñ@13@rwqerqwe@17@asdfadsf@123@erqwer_qfdasd@23
-temporada2:adfsads@23

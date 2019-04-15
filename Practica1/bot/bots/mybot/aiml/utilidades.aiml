@@ -647,7 +647,7 @@
 		</template>
 	</category>
 
-	    <category>
+	<category>
         <pattern> ANIADEY * </pattern>
         <template>
             <think>
