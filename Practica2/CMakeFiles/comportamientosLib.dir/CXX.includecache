@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/pcordero/Software/PracticasUGR/PracticasIA/Practica2/Comportamientos_Jugador/jugador.cpp
+../Comportamientos_Jugador/jugador.hpp
+/home/pcordero/Software/PracticasUGR/PracticasIA/Practica2/Comportamientos_Jugador/jugador.hpp
+motorlib/util.h
+/home/pcordero/Software/PracticasUGR/PracticasIA/Practica2/Comportamientos_Jugador/motorlib/util.h
+iostream
+-
+cmath
+-
+set
+-
+stack
+-
+
+/home/pcordero/Software/PracticasUGR/PracticasIA/Practica2/Comportamientos_Jugador/jugador.hpp
+comportamientos/comportamiento.hpp
+/home/pcordero/Software/PracticasUGR/PracticasIA/Practica2/Comportamientos_Jugador/comportamientos/comportamiento.hpp
+list
+-
+
+include/comportamientos/comportamiento.hpp
+vector
+-
+
+include/motorlib/util.h
+cstdlib
+-
+

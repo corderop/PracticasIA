@@ -11,32 +11,69 @@
 // que se piden en la práctica. Tiene como entrada la información de los
 // sensores y devuelve la acción a realizar.
 Action ComportamientoJugador::think(Sensores sensores) {
-	Action accion = actIDLE;
-	// Estoy en el nivel 1
+	//Capturar valores de filas y columnas
+	if(sensores.mensajeF != -1){
+		fil = sensores.mensajeF;
+		col = sensores.mensajeC;
+	}
 
-	if (sensores.nivel != 4){
-		if (sensores.mensajeF != -1){
-			fil = sensores.mensajeF;
-			col = sensores.mensajeC;
-			brujula = 0; // 0 corresponde con Norte
+	// Actualizar estado de la última acción
+	switch(ultimaAccion){
+		case actTURN_R: brujula = (brujula+1)%4; break;
+		case actTURN_L: brujula = (brujula+1)%4; break;
+		case actFORWARD:
+			switch (brujula){
+				case 0: fil--; break;
+				case 1: col++; break;
+				case 2: fil++; break;
+				case 3: col--; break;
+			}
+			break;
+	}
+	// cout<<"Fila:"<< fil <<" Col: "<< col <<" Or: "<< brujula <<endl;
 
-			actual.fila = fil;
-			actual.columna = col;
-			actual.orientacion = brujula;
+	// Mirar si ha cambiado el destino
+	if(sensores.destinoF != destino.fila or sensores.destinoC!=destino.columna){
+		destino.fila = sensores.destinoF;
+		destino.columna = sensores.destinoC;
+		hayPlan=false;
+	}
 
-			destino.fila = sensores.destinoF;
-			destino.columna = sensores.destinoC;
+	// Calcular un camino hasta el destino
+	if(!hayPlan){
+		actual.fila = fil;
+		actual.columna = col;
+		actual.orientacion = brujula;
+		hayPlan = pathFinding(sensores.nivel, actual, destino, plan);
+	}
+
+	// // Sistema de movimiento
+	// unsigned char contenidoCasilla;
+	// switch(brujula){
+	// 	case 0: contenidoCasilla = mapaResultado[fil-1][col]; break;
+	// 	case 1: contenidoCasilla = mapaResultado[fil][col+1]; break;
+	// 	case 2: contenidoCasilla = mapaResultado[fil+1][col]; break;
+	// 	case 3: contenidoCasilla = mapaResultado[fil][col-1]; break;
+	// }
+
+	Action sigAccion = actIDLE;
+	
+	if(hayPlan and plan.size()>0){
+		sigAccion = plan.front();
+		plan.erase(plan.begin());
+	}
+	else{
+		if(sensores.terreno[2]=='P' or sensores.terreno[2]=='M' or
+		   sensores.terreno[2]=='D' or sensores.superficie[2]=='a' ){
+			sigAccion = actTURN_R;
 		}
-
-		bool hay_plan = pathFinding (sensores.nivel, actual, destino, plan);
-
-	}
-	else {
-		// Estoy en el nivel 2
-		cout << "Aún no implementado el nivel 2" << endl;
+		else{
+			sigAccion = actFORWARD;
+		}
 	}
 
-  return accion;
+	ultimaAccion = sigAccion;
+  	return sigAccion;
 }
 
 
