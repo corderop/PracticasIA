@@ -11,6 +11,20 @@ struct estado {
   int orientacion;
 };
 
+struct nodoConCoste{
+	estado st;
+	list<Action> secuencia;
+	int cost;
+
+	bool operator<(const nodoConCoste& b) const{
+    if(cost == b.cost){
+      return secuencia.size() > b.secuencia.size();
+    }
+    else
+      return cost > b.cost;
+  }
+};
+
 class ComportamientoJugador : public Comportamiento {
   public:
     ComportamientoJugador(unsigned int size) : Comportamiento(size) {
@@ -55,6 +69,8 @@ class ComportamientoJugador : public Comportamiento {
     bool pathFinding(int level, const estado &origen, const estado &destino, list<Action> &plan);
     bool pathFinding_Profundidad(const estado &origen, const estado &destino, list<Action> &plan);
     bool pathFinding_Anchura(const estado &origen, const estado &destino, list<Action> &plan);
+    bool pathFinding_CostoUniforme(const estado &origen, const estado &destino, list<Action> &plan);
+    void calcularCoste(nodoConCoste &a);
 
     void PintaPlan(list<Action> plan);
     bool HayObstaculoDelante(estado &st);

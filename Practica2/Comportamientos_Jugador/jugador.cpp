@@ -80,7 +80,7 @@ bool ComportamientoJugador::pathFinding (int level, const estado &origen, const 
 				  return pathFinding_Anchura(origen, destino, plan);
 						break;
 		case 3: cout << "Busqueda Costo Uniforme\n";
-						// Incluir aqui la llamada al busqueda de costo uniforme
+				  return pathFinding_CostoUniforme(origen, destino, plan);
 						break;
 		case 4: cout << "Busqueda para el reto\n";
 						// Incluir aqui la llamada al algoritmo de búsqueda usado en el nivel 2
@@ -228,7 +228,7 @@ bool ComportamientoJugador::pathFinding_Profundidad(const estado &origen, const 
 // Entran los puntos origen y destino y devuelve la
 // secuencia de acciones en plan, una lista de acciones.
 bool ComportamientoJugador::pathFinding_Anchura(const estado &origen, const estado &destino, list<Action> &plan) {
-		//Borro la lista
+	//Borro la lista
 	cout << "Calculando plan\n";
 	plan.clear();
 	set<estado,ComparaEstados> generados; // Lista de Cerrados
@@ -296,7 +296,107 @@ bool ComportamientoJugador::pathFinding_Anchura(const estado &origen, const esta
 	return false;
 }
 
+// Sobrecarga para la priority_queue de costo uniforme
+void ComportamientoJugador::calcularCoste(nodoConCoste &a){
+	char siguiente;
+	switch(a.st.orientacion){
+		case 0:	siguiente = mapaResultado[a.st.fila-1][a.st.columna];
+				break;
+		case 1: siguiente = mapaResultado[a.st.fila][a.st.columna+1];
+				break;
+		case 2: siguiente = mapaResultado[a.st.fila+1][a.st.columna];
+				break;
+		case 3: siguiente = mapaResultado[a.st.fila][a.st.columna-1];
+				break;
+	}
 
+	switch(siguiente){
+		case 'T': a.cost = 2;
+				  break;
+		case 'B': a.cost = 5;
+				  break;
+		case 'A': a.cost = 10;
+				  break;
+		default:  a.cost = 1;
+				  break;
+	}
+}
+
+// Implementación de la búsqueda de costo uniforme.
+// Entran los puntos origen y destino y devuelve la
+// secuencia de acciones en plan, una lista de acciones.
+bool ComportamientoJugador::pathFinding_CostoUniforme(const estado &origen, const estado &destino, list<Action> &plan) {
+	//Borro la lista
+	cout << "Calculando plan\n";
+	plan.clear();
+	set<estado,ComparaEstados> generados; // Lista de Cerrados
+	priority_queue<nodoConCoste> cola;			  // Lista de Abiertos
+
+    nodoConCoste current;
+	current.st = origen;
+	current.secuencia.empty();
+
+	cola.push(current);
+
+    while (!cola.empty() and (current.st.fila!=destino.fila or current.st.columna != destino.columna)){
+
+		cola.pop();
+		generados.insert(current.st);
+
+		// Generar descendiente de girar a la izquierda
+		nodoConCoste hijoTurnL = current;
+		hijoTurnL.st.orientacion = (hijoTurnL.st.orientacion+3)%4;
+		if (generados.find(hijoTurnL.st) == generados.end()){
+			hijoTurnL.secuencia.push_back(actTURN_L);
+			// calcularCoste(hijoTurnL);
+			hijoTurnL.cost = 1;
+			cola.push(hijoTurnL);
+		}
+
+		// Generar descendiente de girar a la derecha
+		nodoConCoste hijoTurnR = current;
+		hijoTurnR.st.orientacion = (hijoTurnR.st.orientacion+1)%4;
+		if (generados.find(hijoTurnR.st) == generados.end()){
+			hijoTurnR.secuencia.push_back(actTURN_R);
+			// calcularCoste(hijoTurnR);
+			hijoTurnR.cost = 1;
+			cola.push(hijoTurnR);
+		}
+
+		// Generar descendiente de avanzar
+		nodoConCoste hijoForward = current;
+		if (!HayObstaculoDelante(hijoForward.st)){
+			if (generados.find(hijoForward.st) == generados.end()){
+				hijoForward.secuencia.push_back(actFORWARD);
+				calcularCoste(hijoForward);
+				cola.push(hijoForward);
+			}
+		}
+
+		// Tomo el siguiente valor de la cola
+		if (!cola.empty()){
+			current = cola.top();
+		}
+	}
+
+    cout << "Terminada la busqueda\n";
+
+	if (current.st.fila == destino.fila and current.st.columna == destino.columna){
+		cout << "Cargando el plan\n";
+		plan = current.secuencia;
+		cout << "Longitud del plan: " << plan.size() << endl;
+		PintaPlan(plan);
+		// ver el plan en el mapa
+		VisualizaPlan(origen, plan);
+		return true;
+	}
+	else {
+		cout << "No encontrado plan\n";
+	}
+
+
+	return false;
+}
 
 
 
