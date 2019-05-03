@@ -20,7 +20,7 @@ Action ComportamientoJugador::think(Sensores sensores) {
 		conozcoMiPosicion = true;
 		hayPlan = false;
 	}
-	else{
+	else if(!conozcoMiPosicion){
 		int pos = hayPK(sensores);
 		if(pos!=0 && !hayPlan){
 			actual.fila = fil;
@@ -43,19 +43,19 @@ Action ComportamientoJugador::think(Sensores sensores) {
 	}
 
 	// Calcular un camino hasta el destino
-	if(!hayPlan){
-		if(mapaResultado[destino.fila][destino.columna]!='?'){
+	if(!hayPlan && conozcoMiPosicion){
+		// if(mapaResultado[destino.fila][destino.columna]!='?'){
 			actual.fila = fil;
 			actual.columna = col;
 			actual.orientacion = brujula;
 			hayPlan = pathFinding(sensores.nivel, actual, destino, plan);
-		}
-		else if( sensores.nivel == 4 && conozcoMiPosicion){
-			actual.fila = fil;
-			actual.columna = col;
-			actual.orientacion = brujula;
-			hayPlan = pathFinding_CostoUniforme(actual, destino, plan);
-		}
+		// }
+		// else if( sensores.nivel == 4 && conozcoMiPosicion){
+		// 	actual.fila = fil;
+		// 	actual.columna = col;
+		// 	actual.orientacion = brujula;
+		// 	hayPlan = pathFinding_CostoUniforme(actual, destino, plan);
+		// }
 	}
 	
 
@@ -73,7 +73,7 @@ Action ComportamientoJugador::think(Sensores sensores) {
 			}		
 		}
 	}
-	else{
+	else if(!hayPlan){
 		if(sensores.terreno[2]=='P' or sensores.terreno[2]=='M' or
 		   sensores.terreno[2]=='D' or sensores.superficie[2]=='a' ){
 			sigAccion = actTURN_R;
@@ -117,7 +117,7 @@ bool ComportamientoJugador::pathFinding (int level, const estado &origen, const 
 				  return pathFinding_CostoUniforme(origen, destino, plan);
 						break;
 		case 4: cout << "Busqueda para el reto\n";
-					return pathFinding_Nivel2(origen, destino, plan);
+					return pathFinding_CostoUniforme(origen, destino, plan);
 						break;
 	}
 	cout << "Comportamiento sin implementar\n";
@@ -371,13 +371,15 @@ bool ComportamientoJugador::pathFinding_Anchura(const estado &origen, const esta
 // Sobrecarga para la priority_queue de costo uniforme
 void ComportamientoJugador::calcularCoste(nodoConCoste &a){
 	switch(mapaResultado[a.st.fila][a.st.columna]){
-		case 'T': a.cost = 2;
+		case 'T': a.cost += 2;
 				  break;
-		case 'B': a.cost = 5;
+		case 'B': a.cost += 5;
 				  break;
-		case 'A': a.cost = 10;
+		case 'A': a.cost += 10;
 				  break;
-		default:  a.cost = 1;
+		case '?': a.cost += 4;
+					break;
+		default:  a.cost += 1;
 				  break;
 	}
 }
@@ -395,6 +397,7 @@ bool ComportamientoJugador::pathFinding_CostoUniforme(const estado &origen, cons
     nodoConCoste current;
 	current.st = origen;
 	current.secuencia.empty();
+	current.cost = 0;
 
 	cola.push(current);
 
@@ -418,7 +421,7 @@ bool ComportamientoJugador::pathFinding_CostoUniforme(const estado &origen, cons
 		hijoTurnR.st.orientacion = (hijoTurnR.st.orientacion+1)%4;
 		if (generados.find(hijoTurnR.st) == generados.end()){
 			hijoTurnR.secuencia.push_back(actTURN_R);
-			hijoTurnR.cost = 1;
+			hijoTurnR.cost += 1;
 			cola.push(hijoTurnR);
 		}
 
@@ -427,7 +430,7 @@ bool ComportamientoJugador::pathFinding_CostoUniforme(const estado &origen, cons
 		hijoTurnL.st.orientacion = (hijoTurnL.st.orientacion+3)%4;
 		if (generados.find(hijoTurnL.st) == generados.end()){
 			hijoTurnL.secuencia.push_back(actTURN_L);
-			hijoTurnL.cost = 1;
+			hijoTurnL.cost += 1;
 			cola.push(hijoTurnL);
 		}
 
