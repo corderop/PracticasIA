@@ -27,6 +27,8 @@ comportamientos/comportamiento.hpp
 /home/pcordero/Software/PracticasUGR/PracticasIA/Practica2/Comportamientos_Jugador/comportamientos/comportamiento.hpp
 list
 -
+set
+-
 
 include/comportamientos/comportamiento.hpp
 vector

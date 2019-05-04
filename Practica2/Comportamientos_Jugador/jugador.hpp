@@ -4,6 +4,7 @@
 #include "comportamientos/comportamiento.hpp"
 
 #include <list>
+#include <set>
 
 struct estado {
   int fila;
@@ -18,10 +19,10 @@ struct nodoConCoste{
 
 	bool operator<(const nodoConCoste& b) const{
     if(cost == b.cost){
-      return secuencia.size() > b.secuencia.size();
+      return secuencia.size() < b.secuencia.size();
     }
     else
-      return cost > b.cost;
+      return cost < b.cost;
   }
 };
 
@@ -83,7 +84,7 @@ class ComportamientoJugador : public Comportamiento {
     bool HayObstaculoDelante(estado &st);
     bool HayObstaculoDelanteNivel2(estado &st);
     void actualizarMapa(const Sensores &sensores);
-    // bool HayObstaculoDelantePK(Sensores &sensores, estadoPK &st, int orInicio);
+    multiset<nodoConCoste>::iterator buscarIgual(const nodoConCoste &a, const multiset<nodoConCoste> &b);
 
 };
 

@@ -44,18 +44,10 @@ Action ComportamientoJugador::think(Sensores sensores) {
 
 	// Calcular un camino hasta el destino
 	if(!hayPlan && conozcoMiPosicion){
-		// if(mapaResultado[destino.fila][destino.columna]!='?'){
-			actual.fila = fil;
-			actual.columna = col;
-			actual.orientacion = brujula;
-			hayPlan = pathFinding(sensores.nivel, actual, destino, plan);
-		// }
-		// else if( sensores.nivel == 4 && conozcoMiPosicion){
-		// 	actual.fila = fil;
-		// 	actual.columna = col;
-		// 	actual.orientacion = brujula;
-		// 	hayPlan = pathFinding_CostoUniforme(actual, destino, plan);
-		// }
+		actual.fila = fil;
+		actual.columna = col;
+		actual.orientacion = brujula;
+		hayPlan = pathFinding(sensores.nivel, actual, destino, plan);
 	}
 	
 
@@ -384,6 +376,19 @@ void ComportamientoJugador::calcularCoste(nodoConCoste &a){
 	}
 }
 
+multiset<nodoConCoste>::iterator ComportamientoJugador::buscarIgual(const nodoConCoste &a, const multiset<nodoConCoste> &b){
+	multiset<nodoConCoste>::iterator salida = b.end();
+	multiset<nodoConCoste>::iterator it;
+
+	for(it=b.begin(); it!=b.end() && salida==b.end(); it++)
+		if(a.st.fila == it->st.fila && 
+		   a.st.columna == it->st.columna &&
+			 a.st.orientacion == it->st.orientacion)
+			 salida = it;
+
+	return salida;
+}
+
 // Implementación de la búsqueda de costo uniforme.
 // Entran los puntos origen y destino y devuelve la
 // secuencia de acciones en plan, una lista de acciones.
@@ -392,18 +397,18 @@ bool ComportamientoJugador::pathFinding_CostoUniforme(const estado &origen, cons
 	cout << "Calculando plan\n";
 	plan.clear();
 	set<estado,ComparaEstados> generados; // Lista de Cerrados
-	priority_queue<nodoConCoste> cola;    // Lista de Abiertos
+	multiset<nodoConCoste> cola;    // Lista de Abiertos
 
-    nodoConCoste current;
+  nodoConCoste current;
 	current.st = origen;
 	current.secuencia.empty();
 	current.cost = 0;
 
-	cola.push(current);
+	cola.insert(current);
 
     while (!cola.empty() and (current.st.fila!=destino.fila or current.st.columna != destino.columna)){
 
-		cola.pop();
+		cola.erase(cola.begin());
 		generados.insert(current.st);
 
 		// Generar descendiente de avanzar
@@ -412,7 +417,15 @@ bool ComportamientoJugador::pathFinding_CostoUniforme(const estado &origen, cons
 			if (generados.find(hijoForward.st) == generados.end()){
 				hijoForward.secuencia.push_back(actFORWARD);
 				calcularCoste(hijoForward);
-				cola.push(hijoForward);
+				multiset<nodoConCoste>::iterator it = buscarIgual(hijoForward, cola);
+				if(it!=cola.end()){
+					if(hijoForward < (*it)){
+						cola.erase(it);
+						cola.insert(hijoForward);
+					}
+				}
+				else
+					cola.insert(hijoForward);	
 			}
 		}
 
@@ -422,7 +435,15 @@ bool ComportamientoJugador::pathFinding_CostoUniforme(const estado &origen, cons
 		if (generados.find(hijoTurnR.st) == generados.end()){
 			hijoTurnR.secuencia.push_back(actTURN_R);
 			hijoTurnR.cost += 1;
-			cola.push(hijoTurnR);
+			multiset<nodoConCoste>::iterator it = buscarIgual(hijoTurnR, cola);
+			if(it!=cola.end()){
+				if(hijoTurnR < (*it)){
+					cola.erase(it);
+					cola.insert(hijoTurnR);
+				}
+			}
+			else
+				cola.insert(hijoTurnR);
 		}
 
 		// Generar descendiente de girar a la izquierda
@@ -431,86 +452,20 @@ bool ComportamientoJugador::pathFinding_CostoUniforme(const estado &origen, cons
 		if (generados.find(hijoTurnL.st) == generados.end()){
 			hijoTurnL.secuencia.push_back(actTURN_L);
 			hijoTurnL.cost += 1;
-			cola.push(hijoTurnL);
-		}
-
-		// Tomo el siguiente valor de la cola
-		if (!cola.empty()){
-			current = cola.top();
-		}
-	}
-
-    cout << "Terminada la busqueda\n";
-
-	if (current.st.fila == destino.fila and current.st.columna == destino.columna){
-		cout << "Cargando el plan\n";
-		plan = current.secuencia;
-		cout << "Longitud del plan: " << plan.size() << endl;
-		PintaPlan(plan);
-		// ver el plan en el mapa
-		VisualizaPlan(origen, plan);
-		return true;
-	}
-	else {
-		cout << "No encontrado plan\n";
-	}
-
-
-	return false;
-}
-
-// Implementación del nivel 2.
-// Entran los puntos origen y destino y devuelve la
-// secuencia de acciones en plan, una lista de acciones.
-bool ComportamientoJugador::pathFinding_Nivel2(const estado &origen, const estado &destino, list<Action> &plan) {
-	//Borro la lista
-	cout << "Calculando plan\n";
-	plan.clear();
-	set<estado,ComparaEstados> generados; // Lista de Cerrados
-	priority_queue<nodoConCoste> cola;    // Lista de Abiertos
-
-  nodoConCoste current;
-	current.st = origen;
-	current.secuencia.empty();
-
-	cola.push(current);
-
-    while (!cola.empty() and (current.st.fila!=destino.fila or current.st.columna != destino.columna)){
-
-		cola.pop();
-		generados.insert(current.st);
-
-		// Generar descendiente de avanzar
-		nodoConCoste hijoForward = current;
-		if (!HayObstaculoDelanteNivel2(hijoForward.st)){
-			if (generados.find(hijoForward.st) == generados.end()){
-				hijoForward.secuencia.push_back(actFORWARD);
-				calcularCoste(hijoForward);
-				cola.push(hijoForward);
+			multiset<nodoConCoste>::iterator it = buscarIgual(hijoTurnL, cola);
+			if(it!=cola.end()){
+				if(hijoTurnL < (*it)){
+					cola.erase(it);
+					cola.insert(hijoTurnL);
+				}
 			}
-		}
-
-		// Generar descendiente de girar a la derecha
-		nodoConCoste hijoTurnR = current;
-		hijoTurnR.st.orientacion = (hijoTurnR.st.orientacion+1)%4;
-		if (generados.find(hijoTurnR.st) == generados.end()){
-			hijoTurnR.secuencia.push_back(actTURN_R);
-			hijoTurnR.cost = 1;
-			cola.push(hijoTurnR);
-		}
-
-		// Generar descendiente de girar a la izquierda
-		nodoConCoste hijoTurnL = current;
-		hijoTurnL.st.orientacion = (hijoTurnL.st.orientacion+3)%4;
-		if (generados.find(hijoTurnL.st) == generados.end()){
-			hijoTurnL.secuencia.push_back(actTURN_L);
-			hijoTurnL.cost = 1;
-			cola.push(hijoTurnL);
+			else
+				cola.insert(hijoTurnL);
 		}
 
 		// Tomo el siguiente valor de la cola
 		if (!cola.empty()){
-			current = cola.top();
+			current = (*(cola.begin()));
 		}
 	}
 
@@ -532,8 +487,6 @@ bool ComportamientoJugador::pathFinding_Nivel2(const estado &origen, const estad
 
 	return false;
 }
-
-
 
 void ComportamientoJugador::actualizarMapa(const Sensores &sensores){
 	mapaResultado[fil][col] = sensores.terreno[0];
