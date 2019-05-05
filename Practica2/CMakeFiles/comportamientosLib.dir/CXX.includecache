@@ -21,6 +21,10 @@ stack
 -
 queue
 -
+stdlib.h
+-
+time.h
+-
 
 /home/pcordero/Software/PracticasUGR/PracticasIA/Practica2/Comportamientos_Jugador/jugador.hpp
 comportamientos/comportamiento.hpp

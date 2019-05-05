@@ -6,6 +6,8 @@
 #include <set>
 #include <stack>
 #include <queue>
+#include<stdlib.h>
+#include<time.h>
 
 
 // Este es el método principal que debe contener los 4 Comportamientos_Jugador
@@ -20,14 +22,10 @@ Action ComportamientoJugador::think(Sensores sensores) {
 		conozcoMiPosicion = true;
 		hayPlan = false;
 	}
-	else if(!conozcoMiPosicion){
+	else if(!conozcoMiPosicion && !hayPlan){
 		int pos = hayPK(sensores);
-		if(pos!=0 && !hayPlan){
-			actual.fila = fil;
-			actual.columna = col;
-			actual.orientacion = brujula;
-			estado stPk = buscarPK(actual, pos); 
-		  hayPlan = pathFinding_PK(actual, stPk, plan);
+		if(pos!=0){
+		  hayPlan = pathFinding_PK(sensores, pos, plan);
 		}
 	}
 
@@ -66,13 +64,27 @@ Action ComportamientoJugador::think(Sensores sensores) {
 		}
 	}
 	else if(!hayPlan){
+		srand(time(NULL));
+		int num;
+		static int num2 = 0;
 		if(sensores.terreno[2]=='P' or sensores.terreno[2]=='M' or
 		   sensores.terreno[2]=='D' or sensores.superficie[2]=='a' ){
-			sigAccion = actTURN_R;
+			sigAccion = actTURN_L;
 		}
 		else{
 			sigAccion = actFORWARD;
+			num2++;
+			if(num2==30){
+				num=rand()%2;
+				switch (num){
+					case 0: sigAccion = actTURN_L; break;
+					case 1: sigAccion = actTURN_R; break;
+				}
+				num2=0;
+			}
 		}
+
+		
 	}
 
 	ultimaAccion = sigAccion;
@@ -563,39 +575,93 @@ void ComportamientoJugador::actualizarMapa(const Sensores &sensores){
 	}
 }
 
-bool ComportamientoJugador::pathFinding_PK(const estado &origen, const estado &destino, list<Action> &plan){
+bool ComportamientoJugador::pathFinding_PK(const Sensores &sensores, int destino, list<Action> &plan){
 	//Borro la lista
 	cout << "Calculando plan\n";
 	plan.clear();
-	set<estado,ComparaEstados> generados; // Lista de Cerrados
-	queue<nodo> cola;    // Lista de Abiertos
+	set<estadoPK,ComparaEstadosPK> generados; // Lista de Cerrados
+	queue<nodoPK> cola;    // Lista de Abiertos
 
-  nodo current;
-	current.st = origen;
+  nodoPK current;
+	current.st.pos = 0;
+	current.st.orientacion = 0;
 	current.secuencia.empty();
 
 	cola.push(current);
 
-    while (!cola.empty() and (current.st.fila!=destino.fila or current.st.columna != destino.columna)){
+  while (!cola.empty() and current.st.pos!=destino){
 
 		cola.pop();
 		generados.insert(current.st);
 
 		// Generar descendiente de avanzar
-		nodo hijoForward = current;
+		nodoPK hijoForward = current;
+		int aux = hijoForward.st.pos;
 		switch (hijoForward.st.orientacion) {
-			case 0: hijoForward.st.fila--; break;
-			case 1: hijoForward.st.columna++; break;
-			case 2: hijoForward.st.fila++; break;
-			case 3: hijoForward.st.columna--; break;
+			case 0: switch(hijoForward.st.pos){
+								case 0: hijoForward.st.pos += 2; break;
+								case 1:
+								case 2:
+								case 3:  hijoForward.st.pos += 4 ; break;
+								case 4: 
+								case 5: 
+								case 6:
+								case 7:
+								case 8:  hijoForward.st.pos += 6 ; break;
+							}
+							break;
+			case 1: switch(hijoForward.st.pos){
+								case 1:  hijoForward.st.pos += 1 ; break;
+								case 2:  hijoForward.st.pos += 1 ; break;
+								case 4:  hijoForward.st.pos += 1 ; break;
+								case 5:  hijoForward.st.pos += 1 ; break;
+								case 6:  hijoForward.st.pos += 1 ; break;
+								case 7:  hijoForward.st.pos += 1 ; break;
+								case 9:  hijoForward.st.pos += 1 ; break;
+								case 10:  hijoForward.st.pos += 1 ; break;
+								case 11:  hijoForward.st.pos += 1 ; break;
+								case 12:  hijoForward.st.pos += 1 ; break;
+								case 13:  hijoForward.st.pos += 1 ; break;
+								case 14:  hijoForward.st.pos += 1 ; break;
+							}
+							break;
+			case 2: switch(hijoForward.st.pos){
+								case 2:  hijoForward.st.pos -= 2 ; break;
+								case 5: 
+								case 6: 
+								case 7:  hijoForward.st.pos -= 4 ; break;
+								case 10: 
+								case 11:
+								case 12: 
+								case 13: 
+								case 14:  hijoForward.st.pos -= 6 ; break;
+							}
+							break;
+			case 3: switch(hijoForward.st.pos){
+								case 2:  hijoForward.st.pos -= 1 ; break;
+								case 3:  hijoForward.st.pos -= 1 ; break;
+								case 5:  hijoForward.st.pos -= 1 ; break;
+								case 6:  hijoForward.st.pos -= 1 ; break;
+								case 7:  hijoForward.st.pos -= 1 ; break;
+								case 8:  hijoForward.st.pos -= 1 ; break;
+								case 10:  hijoForward.st.pos -= 1 ; break;
+								case 11:  hijoForward.st.pos -= 1 ; break;
+								case 12:  hijoForward.st.pos -= 1 ; break;
+								case 13:  hijoForward.st.pos -= 1 ; break;
+								case 14:  hijoForward.st.pos -= 1 ; break;
+								case 15:  hijoForward.st.pos -= 1 ; break;
+							}
+							break;
 		}
-		if (generados.find(hijoForward.st) == generados.end()){
-			hijoForward.secuencia.push_back(actFORWARD);
-			cola.push(hijoForward);
+		if(!EsObstaculo(sensores.terreno[hijoForward.st.pos])){
+			if (generados.find(hijoForward.st) == generados.end()){
+				hijoForward.secuencia.push_back(actFORWARD);
+				cola.push(hijoForward);
+			}
 		}
 
 		// Generar descendiente de girar a la derecha
-		nodo hijoTurnR = current;
+		nodoPK hijoTurnR = current;
 		hijoTurnR.st.orientacion = (hijoTurnR.st.orientacion+1)%4;
 		if (generados.find(hijoTurnR.st) == generados.end()){
 			hijoTurnR.secuencia.push_back(actTURN_R);
@@ -603,7 +669,7 @@ bool ComportamientoJugador::pathFinding_PK(const estado &origen, const estado &d
 		}
 
 		// Generar descendiente de girar a la izquierda
-		nodo hijoTurnL = current;
+		nodoPK hijoTurnL = current;
 		hijoTurnL.st.orientacion = (hijoTurnL.st.orientacion+3)%4;
 		if (generados.find(hijoTurnL.st) == generados.end()){
 			hijoTurnL.secuencia.push_back(actTURN_L);
@@ -618,7 +684,7 @@ bool ComportamientoJugador::pathFinding_PK(const estado &origen, const estado &d
 
     cout << "Terminada la busqueda\n";
 
-	if (current.st.fila == destino.fila and current.st.columna == destino.columna){
+	if (current.st.pos == destino){
 		cout << "Cargando el plan\n";
 		plan = current.secuencia;
 		cout << "Longitud del plan: " << plan.size() << endl;

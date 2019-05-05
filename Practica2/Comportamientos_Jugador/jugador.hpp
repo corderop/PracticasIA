@@ -26,6 +26,25 @@ struct nodoConCoste{
   }
 };
 
+struct estadoPK {
+  int pos;
+  int orientacion;
+};
+
+struct ComparaEstadosPK{
+	bool operator()(const estadoPK &a, const estadoPK &b) const{
+		if (a.pos > b.pos or (a.pos == b.pos and a.orientacion > b.orientacion))
+			return true;
+		else
+			return false;
+	}
+};
+
+struct nodoPK{
+	estadoPK st;
+	list<Action> secuencia;
+};
+
 class ComportamientoJugador : public Comportamiento {
   public:
     ComportamientoJugador(unsigned int size) : Comportamiento(size) {
@@ -75,7 +94,7 @@ class ComportamientoJugador : public Comportamiento {
     bool pathFinding_Anchura(const estado &origen, const estado &destino, list<Action> &plan);
     bool pathFinding_CostoUniforme(const estado &origen, const estado &destino, list<Action> &plan);
     bool pathFinding_Nivel2(const estado &origen, const estado &destino, list<Action> &plan);
-    bool pathFinding_PK(const estado &origen, const estado &destino, list<Action> &plan);
+    bool pathFinding_PK(const Sensores &sensores, int destino, list<Action> &plan);
     void calcularCoste(nodoConCoste &a);
     int hayPK(Sensores sensores);
     estado buscarPK(const estado &actual, int pos);
