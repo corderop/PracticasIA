@@ -93,15 +93,12 @@ class ComportamientoJugador : public Comportamiento {
     bool pathFinding_Profundidad(const estado &origen, const estado &destino, list<Action> &plan);
     bool pathFinding_Anchura(const estado &origen, const estado &destino, list<Action> &plan);
     bool pathFinding_CostoUniforme(const estado &origen, const estado &destino, list<Action> &plan);
-    bool pathFinding_Nivel2(const estado &origen, const estado &destino, list<Action> &plan);
     bool pathFinding_PK(const Sensores &sensores, int destino, list<Action> &plan);
     void calcularCoste(nodoConCoste &a);
     int hayPK(Sensores sensores);
-    estado buscarPK(const estado &actual, int pos);
 
     void PintaPlan(list<Action> plan);
     bool HayObstaculoDelante(estado &st);
-    bool HayObstaculoDelanteNivel2(estado &st);
     void actualizarMapa(const Sensores &sensores);
     multiset<nodoConCoste>::iterator buscarIgual(const nodoConCoste &a, const multiset<nodoConCoste> &b);
 
