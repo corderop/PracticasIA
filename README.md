@@ -4,7 +4,7 @@
 
 <h1 align="center">Prácticas de Inteligencia artificial</h1>
 
-Repositorio dedicado a las prácticas de la asignatura _Inteligencia artificial_, pertenecientes al segundo curso del grado de Ingeniería Informática impartido en la [UGR](https://www.ugr.es/). Las prácticas fueron realizadas en el curso 2018/2019.
+Repositorio dedicado a las prácticas de la asignatura _Inteligencia artificial_, perteneciente al segundo curso del grado de Ingeniería Informática impartido en la [UGR](https://www.ugr.es/). Las prácticas fueron realizadas en el curso 2018/2019.
 
 ## :warning: Advertencia
 
