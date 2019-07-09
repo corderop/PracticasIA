@@ -8,7 +8,7 @@ Repositorio dedicado a las prácticas de la asignatura _Inteligencia artificial_
 
 ## :warning: Advertencia
 
-Los archivos alojados en este repositorio están protegidos por la licencia *INSERTAR LICENCIA*. A pesar del carácter libre de esta, si eres estudiante de la UGR y estás cursando la asignatura, no te recomiendo copiar los archivos ya que pueden ser detectados por el sistema anti-copias que poseen los profesores de la universidad. El uso del código recae sobre tu responsabilidad.
+Los archivos alojados en este repositorio están protegidos por la licencia GNU GPL v3. A pesar del carácter libre de esta, si eres estudiante de la UGR y estás cursando la asignatura, no te recomiendo copiar los archivos ya que pueden ser detectados por el sistema anti-copias que poseen los profesores de la universidad. El uso del código recae sobre tu responsabilidad.
 
 ## Práctica 1: Agente conversacional
 
