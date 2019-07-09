@@ -16,7 +16,7 @@ En esta práctica se realiza un agente conversacional usando AIML. Este agente s
 
 ## Práctica 2: Agente reactivo y deliberativo
 
-En esta práctica se realiza un agente capaz de recorrer un mapa hasta alcanzar un objetivo. En la primera parte de la práctica el agente conoce el mapa completo. En esta parte se implementan tres mecanismos de búsqueda: **búqueda en profundidad**, **busqueda en anchura** y **búsqueda por costo uniforme**. En la segunda parte de la práctica el agente no conoce su entorno por lo que se realizan métodos para descubrir este entorno, además de que se modifica la búsqueda por costo uniforme para encontrar el camino más rapido según el terreno conocido.
+En esta práctica se realiza un agente capaz de recorrer un mapa hasta alcanzar un objetivo. En la primera parte de la práctica el agente conoce el mapa completo. En esta parte se implementan tres mecanismos de búsqueda: **búqueda en profundidad**, **búsqueda en anchura** y **búsqueda por costo uniforme**. En la segunda parte de la práctica el agente no conoce su entorno por lo que se realizan métodos para descubrir este entorno, además de que se modifica la búsqueda por costo uniforme para encontrar el camino más rapido según el terreno conocido.
 
 La práctica completa se puede encontrar en la carpeta [Practica2](https://github.com/corderop/PracticasIA/tree/master/Practica2). Los archivos modificados por mi son [jugador.hpp](https://github.com/corderop/PracticasIA/blob/master/Practica2/Comportamientos_Jugador/jugador.hpp) y [jugador.cpp](https://github.com/corderop/PracticasIA/blob/master/Practica2/Comportamientos_Jugador/jugador.cpp). Todos los demás archivos de esta carpeta han sido implementados por el profesorado de [DECSAI](https://decsai.ugr.es/).
 
